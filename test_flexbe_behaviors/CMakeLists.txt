@@ -1,12 +1,23 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(test_flexbe_behaviors)
 
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED 
+  std_msgs
+  message_generation)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 catkin_python_setup()
+
+add_message_files(
+  FILES
+  PlanCmd.msg
+)
+
+generate_messages(
+  DEPENDENCIES std_msgs 
+)
 
 # specify catkin-specific information
 # INCLUDE_DIRS - The exported include paths (i.e. cflags) for the package
@@ -16,7 +27,7 @@ catkin_python_setup()
 # CFG_EXTRAS - Additional configuration options 
 catkin_package(
 #    INCLUDE_DIRS src
-    LIBRARIES ${PROJECT_NAME})
+    LIBRARIES ${PROJECT_NAME} std_msgs message_runtime)
 
 # use add_library() or add_executable() as required
 #add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRCS})

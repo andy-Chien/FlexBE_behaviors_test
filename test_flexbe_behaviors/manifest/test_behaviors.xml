@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_behaviors">
+
+	<executable package_path="test_flexbe_behaviors.test_behaviors_sm" class="test_behaviorsSM" />
+	<tagstring>01</tagstring>
+	<author>Andy Chien</author>
+	<date>Thu Jun 24 2021</date>
+	<description>
+		test behaviors
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="wait_time" default="5" label="wait_time" hint="Sets the wait_time">
+			<min value="0" />
+			<max value="5" />
+		</param>
+
+		<param type="text" name="robot_1_topic" default="motion_planner/start_online_plan" label="robot_1_topic" hint="Sets the robot_1_topic" />
+
+		<param type="numeric" name="robot_1_id" default="0" label="robot_1_id" hint="Sets the robot_1_id">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="text" name="point_1" default="0" label="point_1" hint="Sets the point_1" />
+
+	</params>
+
+
+</behavior>
