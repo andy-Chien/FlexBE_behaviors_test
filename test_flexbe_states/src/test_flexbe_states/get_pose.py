@@ -24,43 +24,51 @@ class GetPoseState(EventState):
 	"""
 	Publishes a pose from userdata so that it can be displayed in rviz.
 
-	-- joint_values_string 		string 			Index of point to move
+	-- robot_ids                string[]        Robots id to move
+	-- joint_values_input 		string[] 		Value of points to move
 
-	#> joint_values                             Joint angles to move
+	#> robot_ids                int[]           Robots id to move
+	#> joint_values             float[]			joint values of robots, 2 dim list
+	#> plan_mode                string          plan_only or offline or online
 
 	<= done										Pose has been published.
 	<= finish									Task finished
 
 	"""
 	
-	def __init__(self, joint_values_string):
+	def __init__(self, robot_ids, joint_values_input):
 		"""Constructor"""
-		super(GetPoseState, self).__init__(outcomes=['done', 'finish'], output_keys=['joint_values'])
-		self._joint_values_string = joint_values_string
-		self.joint_values = []
+		super(GetPoseState, self).__init__(outcomes=['done', 'finish'], output_keys=['robot_ids', 'joint_values', 'plan_mode'])
+		self.joint_values_input = eval(joint_values_input) if type(joint_values_input) == str else joint_values_input
+		self.robot_ids = eval(robot_ids) if type(robot_ids) == str else robot_ids
+		self.plan_mode = 'plan_only'
 		self.pose_indx = 0
 
 	def execute(self, userdata):
+		plan_mode = ['plan_only', 'offline', 'online']
+		userdata.plan_mode = plan_mode[self.pose_indx % 3]
+		userdata.robot_ids = self.robot_ids
 		userdata.joint_values = self.joint_values
 		time.sleep(0.5)
-		if self.pose_indx == 5:
+		if self.pose_indx == 7:
 			return 'finish'
 		else:
 			return 'done'
 	
 	def on_enter(self, userdata):
-		if self._joint_values_string is not None and self._joint_values_string != '0':
+		if self.joint_values_input is not None:
 			try:
-				self.joint_values = [radians(float(x)) for x in self._joint_values_string.split(',')]
-				self.pose_indx += 1
+				self.joint_values = [[radians(float(x)) for x in joint_values] for joint_values in self.joint_values_input]
+				assert len(self.joint_values) == len(self.robot_ids)
+				self.pose_indx = 5
 				print('pose ', self.pose_indx, ' : ', self.joint_values, ' go!')
 			except Exception as e:
-				Logger.logwarn('Failed to get pose!\n%s' % str(e))
+				Logger.logwarn('Failed to get pose in param!\n%s' % str(e))
 		else:
 			try:
-				# self.joint_values = [radians(float(x)) for x in self._joint_values_string.split(',')]
-				self.joint_values = pose[self.pose_indx % 2]
+				self.joint_values = []
+				self.joint_values.append(pose[self.pose_indx % 2])
 				self.pose_indx += 1
 				print('pose ', self.pose_indx, ' go!')
 			except Exception as e:
-				Logger.logwarn('Failed to get pose!\n%s' % str(e))
+				Logger.logwarn('Failed to get pose in defalt!\n%s' % str(e))

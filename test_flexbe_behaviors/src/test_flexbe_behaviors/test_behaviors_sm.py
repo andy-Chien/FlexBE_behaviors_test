@@ -8,9 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from flexbe_manipulation_states.moveit_to_joints_state import MoveitToJointsState
-from flexbe_states.wait_state import WaitState
 from test_flexbe_states.get_pose import GetPoseState
+from test_flexbe_states.planning_state import PlanningState
+from test_flexbe_states.robot_move import RobotMoveState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -33,9 +33,11 @@ class test_behaviorsSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('wait_time', 5)
-		self.add_parameter('robot_1_topic', 'motion_planner/start_online_plan')
+		self.add_parameter('planner_topic', '/dcma_planner/move_group')
 		self.add_parameter('robot_1_id', 0)
-		self.add_parameter('point_1', '0')
+		self.add_parameter('point_1', 'None')
+		self.add_parameter('robot_ids', '[0]')
+		self.add_parameter('plan_only', True)
 
 		# references to used behaviors
 
@@ -49,7 +51,7 @@ class test_behaviorsSM(Behavior):
 
 
 	def create(self):
-		# x:19 y:62, x:56 y:209
+		# x:169 y:180, x:535 y:165
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -61,23 +63,24 @@ class test_behaviorsSM(Behavior):
 		with _state_machine:
 			# x:132 y:25
 			OperatableStateMachine.add('get_pose',
-										GetPoseState(joint_values_string=self.point_1),
-										transitions={'done': 'traj_plan', 'finish': 'finished'},
+										GetPoseState(robot_ids=self.robot_ids, joint_values_input=self.point_1),
+										transitions={'done': 'plan', 'finish': 'finished'},
 										autonomy={'done': Autonomy.Off, 'finish': Autonomy.Off},
-										remapping={'joint_values': 'joint_values'})
+										remapping={'robot_ids': 'robot_ids', 'plan_only': 'plan_only', 'joint_values': 'joint_values'})
 
-			# x:355 y:17
-			OperatableStateMachine.add('traj_plan',
-										MoveitToJointsState(move_group='robot_0', joint_names=["shoulder_pan_joint", "shoulder_lift_joint", "elbow_joint", "wrist_1_joint", "wrist_2_joint", "wrist_3_joint"], action_topic='/dcma_planner/move_group'),
-										transitions={'reached': 'wait', 'planning_failed': 'failed', 'control_failed': 'failed'},
-										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off},
-										remapping={'joint_config': 'joint_values'})
+			# x:312 y:148
+			OperatableStateMachine.add('move_robot',
+										RobotMoveState(robot_topic='/arm_controller/follow_joint_trajectory'),
+										transitions={'done': 'get_pose', 'failed': 'failed'},
+										autonomy={'done': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'joint_trajectory': 'joint_trajectory'})
 
-			# x:384 y:143
-			OperatableStateMachine.add('wait',
-										WaitState(wait_time=self.wait_time),
-										transitions={'done': 'get_pose'},
-										autonomy={'done': Autonomy.Off})
+			# x:486 y:22
+			OperatableStateMachine.add('plan',
+										PlanningState(move_group='move_group', action_topic=self.planner_topic),
+										transitions={'reached': 'get_pose', 'planning_failed': 'failed', 'control_failed': 'failed', 'planned': 'move_robot'},
+										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'planned': Autonomy.Off},
+										remapping={'robot_ids': 'robot_ids', 'plan_only': 'plan_only', 'joint_config': 'joint_values', 'joint_trajectory': 'joint_trajectory'})
 
 
 		return _state_machine
