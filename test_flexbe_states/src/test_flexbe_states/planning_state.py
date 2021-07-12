@@ -27,10 +27,12 @@ class PlanningState(EventState):
 
 	-- action_topic 	string 		Topic on which MoveIt is listening for action calls.
 
-	># robot_ids		int[]       ID of the robot to plan, first robot's id is 0
+	># robot_ids		int         ID of the robot to plan, first robot's id is 0
 
 	># joint_config		float[]		Target configuration of the joints.
 									Same order as their corresponding names in joint_names.
+	
+	># start_config     float[]     Start configuration of the joints.
 
 	># plan_mode        string      plan_only or offline or online
 
@@ -49,15 +51,14 @@ class PlanningState(EventState):
 		Constructor
 		'''
 		super(PlanningState, self).__init__(outcomes=['reached', 'planning_failed', 'control_failed', 'planned'],
-											input_keys=['robot_ids', 'plan_mode', 'joint_config'],
+											input_keys=['robot_id', 'plan_mode', 'joint_config', 'start_config'],
 											output_keys=['joint_trajectory'])
 		
 		self._action_topic = action_topic
 		
 		self._client = ProxyActionClient({self._action_topic: MoveGroupAction})
 		self._move_group = move_group
-		self._robot_names = ['robot_0', 'robot_1']
-		self._joint_names = [['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']]
+		self._joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
 		self._plan_mode = PlanMode.PLAN_ONLY.value
 
 		self._planning_failed = False
@@ -126,13 +127,14 @@ class PlanningState(EventState):
 		else:
 			print('FAIL')
 		
-		assert len(userdata.robot_ids) == len(userdata.joint_config) and len(userdata.robot_ids) <= len(self._joint_names)
-		for robot_id, joint_configs in zip(userdata.robot_ids, userdata.joint_config):
-			goal_constraints = Constraints()
-			goal_constraints.name = self._robot_names[robot_id]
-			for joint_config, joint_name in zip(joint_configs, self._joint_names[robot_id]):
-				goal_constraints.joint_constraints.append(JointConstraint(joint_name=joint_name, position=joint_config))
-			action_goal.request.goal_constraints.append(goal_constraints)
+		goal_constraints = Constraints()
+		goal_constraints.name = 'robot_' + str(userdata.robot_id)
+		for joint_config, joint_name in zip(userdata.joint_config, self._joint_names):
+			goal_constraints.joint_constraints.append(JointConstraint(joint_name=joint_name, position=joint_config))
+		action_goal.request.goal_constraints.append(goal_constraints)
+		action_goal.request.start_state.joint_state.name = self._joint_names
+		if type(userdata.start_config) == list:
+			action_goal.request.start_state.joint_state.position = userdata.start_config if len(userdata.start_config) == 6 else [] 
 		try:
 			self._client.send_goal(self._action_topic, action_goal)
 		except Exception as e:

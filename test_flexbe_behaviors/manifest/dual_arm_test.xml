@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="dual_arm_test">
+
+	<executable package_path="test_flexbe_behaviors.dual_arm_test_sm" class="dual_arm_testSM" />
+	<tagstring>no1</tagstring>
+	<author>And</author>
+	<date>Thu Jul 08 2021</date>
+	<description>
+		test two arms in one time
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="test_behaviors" />
+
+	<!-- Available Parameters -->
+
+</behavior>

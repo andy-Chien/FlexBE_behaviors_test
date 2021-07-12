@@ -73,7 +73,7 @@ class RobotMoveState(EventState):
 		self._goal = FollowJointTrajectoryGoal()
 		self._goal.goal_time_tolerance = rospy.Time(0.1)
 		self._goal.trajectory = userdata.joint_trajectory
-		self._goal.trajectory.header.stamp = rospy.Time.now()
+		self._goal.trajectory.header.stamp = rospy.Time.now() + rospy.Duration(0.1)
 		try:
 			self._client.send_goal(self._robot_topic, self._goal)
 		except Exception as e:

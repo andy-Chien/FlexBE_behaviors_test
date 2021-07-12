@@ -16,23 +16,16 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="wait_time" default="5" label="wait_time" hint="Sets the wait_time">
+		<param type="text" name="planner_topic" default="robot_0/dcma_planner/move_group" label="planner_topic" hint="Sets the planner_topic" />
+
+		<param type="text" name="robot_topic" default="robot_0/arm_controller/follow_joint_trajectory" label="robot_topic" hint="Sets the robot_topic" />
+
+		<param type="numeric" name="robot_id" default="0" label="robot_id" hint="Sets the robot_id">
 			<min value="0" />
-			<max value="5" />
+			<max value="10" />
 		</param>
 
-		<param type="text" name="planner_topic" default="/dcma_planner/move_group" label="planner_topic" hint="Sets the planner_topic" />
-
-		<param type="numeric" name="robot_1_id" default="0" label="robot_1_id" hint="Sets the robot_1_id">
-			<min value="0" />
-			<max value="1" />
-		</param>
-
-		<param type="text" name="point_1" default="None" label="point_1" hint="Sets the point_1" />
-
-		<param type="text" name="robot_ids" default="[0]" label="robot_ids" hint="Sets the robot_ids" />
-
-		<param type="boolean" name="plan_only" default="True" label="plan_only" hint="Sets the plan_only" />
+		<param type="text" name="plan_mode" default="plan_only" label="plan_mode" hint="Sets the plan_mode" />
 
 	</params>
 

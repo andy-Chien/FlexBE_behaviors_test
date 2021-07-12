@@ -32,12 +32,10 @@ class test_behaviorsSM(Behavior):
 		self.name = 'test_behaviors'
 
 		# parameters of this behavior
-		self.add_parameter('wait_time', 5)
-		self.add_parameter('planner_topic', '/dcma_planner/move_group')
-		self.add_parameter('robot_1_id', 0)
-		self.add_parameter('point_1', 'None')
-		self.add_parameter('robot_ids', '[0]')
-		self.add_parameter('plan_only', True)
+		self.add_parameter('planner_topic', 'robot_0/dcma_planner/move_group')
+		self.add_parameter('robot_topic', 'robot_0/arm_controller/follow_joint_trajectory')
+		self.add_parameter('robot_id', 0)
+		self.add_parameter('plan_mode', 'plan_only')
 
 		# references to used behaviors
 
@@ -63,14 +61,14 @@ class test_behaviorsSM(Behavior):
 		with _state_machine:
 			# x:132 y:25
 			OperatableStateMachine.add('get_pose',
-										GetPoseState(robot_ids=self.robot_ids, joint_values_input=self.point_1),
+										GetPoseState(robot_id=self.robot_id, plan_mode=self.plan_mode),
 										transitions={'done': 'plan', 'finish': 'finished'},
 										autonomy={'done': Autonomy.Off, 'finish': Autonomy.Off},
-										remapping={'robot_ids': 'robot_ids', 'plan_only': 'plan_only', 'joint_values': 'joint_values'})
+										remapping={'robot_id': 'robot_id', 'joint_values': 'joint_values', 'plan_mode': 'plan_mode', 'start_config': 'start_config'})
 
 			# x:312 y:148
 			OperatableStateMachine.add('move_robot',
-										RobotMoveState(robot_topic='/arm_controller/follow_joint_trajectory'),
+										RobotMoveState(robot_topic=self.robot_topic),
 										transitions={'done': 'get_pose', 'failed': 'failed'},
 										autonomy={'done': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_trajectory': 'joint_trajectory'})
@@ -80,7 +78,7 @@ class test_behaviorsSM(Behavior):
 										PlanningState(move_group='move_group', action_topic=self.planner_topic),
 										transitions={'reached': 'get_pose', 'planning_failed': 'failed', 'control_failed': 'failed', 'planned': 'move_robot'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'planned': Autonomy.Off},
-										remapping={'robot_ids': 'robot_ids', 'plan_only': 'plan_only', 'joint_config': 'joint_values', 'joint_trajectory': 'joint_trajectory'})
+										remapping={'robot_id': 'robot_id', 'plan_mode': 'plan_mode', 'joint_config': 'joint_values', 'start_config': 'start_config', 'joint_trajectory': 'joint_trajectory'})
 
 
 		return _state_machine
