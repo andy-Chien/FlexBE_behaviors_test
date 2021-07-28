@@ -11,6 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from test_flexbe_states.get_pose import GetPoseState
 from test_flexbe_states.planning_state import PlanningState
 from test_flexbe_states.robot_move import RobotMoveState
+from test_flexbe_states.ur5_ik import Ur5IkState
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -49,7 +50,7 @@ class test_behaviorsSM(Behavior):
 
 
 	def create(self):
-		# x:169 y:180, x:535 y:165
+		# x:152 y:279, x:775 y:86
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -59,26 +60,33 @@ class test_behaviorsSM(Behavior):
 
 
 		with _state_machine:
-			# x:132 y:25
+			# x:126 y:73
 			OperatableStateMachine.add('get_pose',
-										GetPoseState(robot_id=self.robot_id, plan_mode=self.plan_mode),
-										transitions={'done': 'plan', 'finish': 'finished'},
-										autonomy={'done': Autonomy.Off, 'finish': Autonomy.Off},
-										remapping={'robot_id': 'robot_id', 'joint_values': 'joint_values', 'plan_mode': 'plan_mode', 'start_config': 'start_config'})
+										GetPoseState(),
+										transitions={'done': 'ur5_ik', 'fail': 'finished'},
+										autonomy={'done': Autonomy.Off, 'fail': Autonomy.Off},
+										remapping={'tar_trans': 'tar_trans', 'tar_rot': 'tar_rot'})
 
-			# x:312 y:148
+			# x:314 y:181
 			OperatableStateMachine.add('move_robot',
 										RobotMoveState(robot_topic=self.robot_topic),
 										transitions={'done': 'get_pose', 'failed': 'failed'},
 										autonomy={'done': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_trajectory': 'joint_trajectory'})
 
-			# x:486 y:22
+			# x:491 y:75
 			OperatableStateMachine.add('plan',
-										PlanningState(move_group='move_group', action_topic=self.planner_topic),
+										PlanningState(move_group='move_group', action_topic=self.planner_topic, robot_id=self.robot_id, plan_mode='plan_only'),
 										transitions={'reached': 'get_pose', 'planning_failed': 'failed', 'control_failed': 'failed', 'planned': 'move_robot'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'planned': Autonomy.Off},
-										remapping={'robot_id': 'robot_id', 'plan_mode': 'plan_mode', 'joint_config': 'joint_values', 'start_config': 'start_config', 'joint_trajectory': 'joint_trajectory'})
+										remapping={'joint_config': 'joint_values', 'joint_trajectory': 'joint_trajectory'})
+
+			# x:307 y:4
+			OperatableStateMachine.add('ur5_ik',
+										Ur5IkState(),
+										transitions={'done': 'plan', 'fail': 'failed'},
+										autonomy={'done': Autonomy.Off, 'fail': Autonomy.Off},
+										remapping={'tar_trans': 'tar_trans', 'tar_rot': 'tar_rot', 'joint_values': 'joint_values'})
 
 
 		return _state_machine

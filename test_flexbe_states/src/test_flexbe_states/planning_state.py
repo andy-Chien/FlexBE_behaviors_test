@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import enum
 import rospy
 from actionlib.action_server import ros_timer
 from enum import Enum
@@ -24,17 +25,15 @@ class PlanningState(EventState):
 
 	-- move_group		string		Name of the move group to be used for planning.
 									Specified joint names need to exist in the given group.
-
 	-- action_topic 	string 		Topic on which MoveIt is listening for action calls.
-
-	># robot_ids		int         ID of the robot to plan, first robot's id is 0
+	-- robot_id		    int         ID of the robot to plan, first robot's id is 0
+	-- plan_mode        string      plan_only or offline or online
 
 	># joint_config		float[]		Target configuration of the joints.
 									Same order as their corresponding names in joint_names.
 	
 	># start_config     float[]     Start configuration of the joints.
 
-	># plan_mode        string      plan_only or offline or online
 
 	#> joint_trajectory JointTrajectory  planned or executed trajectory
 
@@ -46,12 +45,12 @@ class PlanningState(EventState):
 	'''
 
 
-	def __init__(self, move_group, action_topic = '/move_group'):
+	def __init__(self, move_group, action_topic='/move_group', robot_id=0, plan_mode='plan_only'):
 		'''
 		Constructor
 		'''
 		super(PlanningState, self).__init__(outcomes=['reached', 'planning_failed', 'control_failed', 'planned'],
-											input_keys=['robot_id', 'plan_mode', 'joint_config', 'start_config'],
+											input_keys=['joint_config'],
 											output_keys=['joint_trajectory'])
 		
 		self._action_topic = action_topic
@@ -59,7 +58,8 @@ class PlanningState(EventState):
 		self._client = ProxyActionClient({self._action_topic: MoveGroupAction})
 		self._move_group = move_group
 		self._joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
-		self._plan_mode = PlanMode.PLAN_ONLY.value
+		self._plan_mode = plan_mode
+		self.robot_id = robot_id
 
 		self._planning_failed = False
 		self._control_failed = False
@@ -107,7 +107,7 @@ class PlanningState(EventState):
 		self._plan_success = False
 		self._excute_success = False
 	
-		self._plan_mode = userdata.plan_mode
+		# self._plan_mode = userdata.plan_mode
 
 
 		action_goal = MoveGroupGoal()
@@ -128,13 +128,18 @@ class PlanningState(EventState):
 			print('FAIL')
 		
 		goal_constraints = Constraints()
-		goal_constraints.name = 'robot_' + str(userdata.robot_id)
-		for joint_config, joint_name in zip(userdata.joint_config, self._joint_names):
+		goal_constraints.name = 'robot_' + str(self.robot_id)
+		print(goal_constraints.name)
+
+		for i, (joint_config, joint_name) in enumerate(zip(userdata.joint_config, self._joint_names)):
+			if i == 5:
+				joint_config = 0.0
 			goal_constraints.joint_constraints.append(JointConstraint(joint_name=joint_name, position=joint_config))
 		action_goal.request.goal_constraints.append(goal_constraints)
 		action_goal.request.start_state.joint_state.name = self._joint_names
-		if type(userdata.start_config) == list:
-			action_goal.request.start_state.joint_state.position = userdata.start_config if len(userdata.start_config) == 6 else [] 
+		# if type(userdata.start_config) == list:
+		# 	action_goal.request.start_state.joint_state.position = userdata.start_config if len(userdata.start_config) == 6 else [] 
+		action_goal.request.start_state.joint_state.position = []
 		try:
 			self._client.send_goal(self._action_topic, action_goal)
 		except Exception as e:
