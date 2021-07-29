@@ -28,7 +28,8 @@ class Ur5IkState(EventState):
 
 	def execute(self, userdata):
 		if self.success:
-			userdata.joint_values = self.ur5_sols[0]
+			indx = 5 if len(self.ur5_sols) >= 6 else 2 if len(self.ur5_sols) >= 3 else 0
+			userdata.joint_values = self.ur5_sols[indx]
 			return 'done'
 		else:
 			return 'fail'

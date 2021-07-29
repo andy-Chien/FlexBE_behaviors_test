@@ -135,6 +135,9 @@ class PlanningState(EventState):
 			if i == 5:
 				joint_config = 0.0
 			goal_constraints.joint_constraints.append(JointConstraint(joint_name=joint_name, position=joint_config))
+		print('=====')
+		print(goal_constraints.joint_constraints)
+		print('~~~~~')
 		action_goal.request.goal_constraints.append(goal_constraints)
 		action_goal.request.start_state.joint_state.name = self._joint_names
 		# if type(userdata.start_config) == list:

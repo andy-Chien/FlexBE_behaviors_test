@@ -76,7 +76,7 @@ class test_behaviorsSM(Behavior):
 
 			# x:491 y:75
 			OperatableStateMachine.add('plan',
-										PlanningState(move_group='move_group', action_topic=self.planner_topic, robot_id=self.robot_id, plan_mode='plan_only'),
+										PlanningState(move_group='move_group', action_topic=self.planner_topic, robot_id=self.robot_id, plan_mode=self.plan_mode),
 										transitions={'reached': 'get_pose', 'planning_failed': 'failed', 'control_failed': 'failed', 'planned': 'move_robot'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'planned': Autonomy.Off},
 										remapping={'joint_config': 'joint_values', 'joint_trajectory': 'joint_trajectory'})

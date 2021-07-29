@@ -4,29 +4,34 @@ from flexbe_core import EventState, Logger
 from math import radians
 import random
 import time
-import transformations as tf
+# import transformations as tf
 
-pose_1 = [[-0.361074158122, 
-		  0.139718910582, 
-		   0.661356381303], [[0.0, 0.0,  1.0], 
+pose_1 = [[-0.421074158122, 
+		  0.239718910582, 
+		   0.361356381303], [[0.0, 0.0,  1.0], 
 							 [0.0, 1.0, 0.0], 
 							 [-1.0, 0.0, 0.0]]]
-pose_2 = [[0.29048904877493978, 
-		  -0.147408276622308135, 
-		   0.4229090515842802], [[0.0, 0.0,  1.0], 
+pose_2 = [[-0.42048904877493978, 
+		  -0.247408276622308135, 
+		   0.3229090515842802], [[0.0, 0.0,  1.0], 
 								 [0.0, 1.0, 0.0], 
 								 [-1.0, 0.0, 0.0]]]
-pose_3 = [[0.37048904877493978, 
-		  -0.09408276622308135, 
-		   0.5229090515842802], [[0.0, 0.0,  1.0], 
+pose_3 = [[-0.42048904877493978, 
+		  0.39408276622308135, 
+		   0.2829090515842802], [[0.0, 0.0,  1.0], 
 								 [0.0, 1.0, 0.0], 
 								 [-1.0, 0.0, 0.0]]]
-pose_4 = [[0.29048904877493978,
- 		  -0.147408276622308135, 
- 		   0.4229090515842802], [[0.0, 0.0,  1.0], 
+pose_4 = [[-0.42048904877493978,
+ 		  -0.347408276622308135, 
+ 		   0.3229090515842802], [[0.0, 0.0,  1.0], 
 								 [0.0, 1.0, 0.0], 
 								 [-1.0, 0.0, 0.0]]]
-pose = [pose_1, pose_2, pose_3, pose_4]
+pose_5 = [[-0.42048904877493978,
+ 		  -0.087408276622308135, 
+ 		   0.2429090515842802], [[0.0, 0.0,  1.0], 
+								 [0.0, 1.0, 0.0], 
+								 [-1.0, 0.0, 0.0]]]
+pose = [pose_1, pose_2, pose_3, pose_4, pose_5]
 
 class GetPoseState(EventState):
 	"""
@@ -47,9 +52,10 @@ class GetPoseState(EventState):
 		self.index = 0
 
 	def execute(self, userdata):
+		p = random.randint(0,4)
 		if pose_1 is not None:
-			userdata.tar_trans = pose[self.index % 4][0]
-			userdata.tar_rot = pose[self.index % 4][1]
+			userdata.tar_trans = pose[p][0]
+			userdata.tar_rot = pose[p][1]
 			return 'done'
 		else:
 			return 'fail'
