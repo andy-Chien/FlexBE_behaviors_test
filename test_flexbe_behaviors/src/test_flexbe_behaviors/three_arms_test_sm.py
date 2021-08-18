@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from test_flexbe_behaviors.test_behaviors_sm import test_behaviorsSM
+from test_flexbe_behaviors.test_behaviors_sm import TestBehaviorsSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -19,22 +19,22 @@ from test_flexbe_behaviors.test_behaviors_sm import test_behaviorsSM
 Created on Thu Jul 08 2021
 @author: Andy Chien
 '''
-class three_arms_testSM(Behavior):
+class ThreeArmsTestSM(Behavior):
 	'''
 	test three arms with dcma planner in one time
 	'''
 
 
 	def __init__(self):
-		super(three_arms_testSM, self).__init__()
-		self.name = 'three_arms_test'
+		super(ThreeArmsTestSM, self).__init__()
+		self.name = 'Three Arms Test'
 
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(test_behaviorsSM, 'Container/test_behaviors')
-		self.add_behavior(test_behaviorsSM, 'Container/test_behaviors_2')
-		self.add_behavior(test_behaviorsSM, 'Container/test_behaviors_3')
+		self.add_behavior(TestBehaviorsSM, 'Container/Test Behaviors')
+		self.add_behavior(TestBehaviorsSM, 'Container/Test Behaviors 2')
+		self.add_behavior(TestBehaviorsSM, 'Container/Test Behaviors 3')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -56,28 +56,28 @@ class three_arms_testSM(Behavior):
 
 		# x:30 y:463, x:130 y:463, x:230 y:463, x:330 y:463
 		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], conditions=[
-										('finished', [('test_behaviors', 'finished'), ('test_behaviors_2', 'finished'), ('test_behaviors_3', 'finished')]),
-										('failed', [('test_behaviors', 'failed'), ('test_behaviors_2', 'failed'), ('test_behaviors_3', 'failed')])
+										('finished', [('Test Behaviors', 'finished'), ('Test Behaviors 2', 'finished'), ('Test Behaviors 3', 'finished')]),
+										('failed', [('Test Behaviors', 'failed'), ('Test Behaviors 2', 'failed'), ('Test Behaviors 3', 'failed')])
 										])
 
 		with _sm_container_0:
 			# x:83 y:103
-			OperatableStateMachine.add('test_behaviors',
-										self.use_behavior(test_behaviorsSM, 'Container/test_behaviors',
+			OperatableStateMachine.add('Test Behaviors',
+										self.use_behavior(TestBehaviorsSM, 'Container/Test Behaviors',
 											parameters={'planner_topic': "robot_0/dcma_planner/move_group", 'robot_topic': "robot_0/arm_controller/follow_joint_trajectory", 'robot_id': 0}),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:332 y:104
-			OperatableStateMachine.add('test_behaviors_2',
-										self.use_behavior(test_behaviorsSM, 'Container/test_behaviors_2',
+			OperatableStateMachine.add('Test Behaviors 2',
+										self.use_behavior(TestBehaviorsSM, 'Container/Test Behaviors 2',
 											parameters={'planner_topic': "robot_1/dcma_planner/move_group", 'robot_topic': "robot_1/arm_controller/follow_joint_trajectory", 'robot_id': 1}),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:588 y:107
-			OperatableStateMachine.add('test_behaviors_3',
-										self.use_behavior(test_behaviorsSM, 'Container/test_behaviors_3',
+			OperatableStateMachine.add('Test Behaviors 3',
+										self.use_behavior(TestBehaviorsSM, 'Container/Test Behaviors 3',
 											parameters={'planner_topic': "robot_2/dcma_planner/move_group", 'robot_topic': "robot_2/arm_controller/follow_joint_trajectory", 'robot_id': 2}),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})

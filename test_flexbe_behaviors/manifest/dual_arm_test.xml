@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="dual_arm_test">
+<behavior name="Dual Arm Test">
 
-	<executable package_path="test_flexbe_behaviors.dual_arm_test_sm" class="dual_arm_testSM" />
+	<executable package_path="test_flexbe_behaviors.dual_arm_test_sm" class="DualArmTestSM" />
 	<tagstring>no1</tagstring>
 	<author>Andy Chien</author>
 	<date>Thu Jul 08 2021</date>
@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="test_behaviors" />
+	<contains name="Test Behaviors" />
 
 	<!-- Available Parameters -->
 

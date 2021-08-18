@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="test_behaviors">
+<behavior name="Test Behaviors">
 
-	<executable package_path="test_flexbe_behaviors.test_behaviors_sm" class="test_behaviorsSM" />
+	<executable package_path="test_flexbe_behaviors.test_behaviors_sm" class="TestBehaviorsSM" />
 	<tagstring>01</tagstring>
 	<author>Andy Chien</author>
 	<date>Thu Jun 24 2021</date>

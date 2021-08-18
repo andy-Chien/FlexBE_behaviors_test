@@ -22,15 +22,15 @@ from test_flexbe_states.ur5_ik import Ur5IkState
 Created on Thu Jun 24 2021
 @author: Andy Chien
 '''
-class test_behaviorsSM(Behavior):
+class TestBehaviorsSM(Behavior):
 	'''
 	Ont robot move with dcma planner test
 	'''
 
 
 	def __init__(self):
-		super(test_behaviorsSM, self).__init__()
-		self.name = 'test_behaviors'
+		super(TestBehaviorsSM, self).__init__()
+		self.name = 'Test Behaviors'
 
 		# parameters of this behavior
 		self.add_parameter('planner_topic', 'robot_0/dcma_planner/move_group')
