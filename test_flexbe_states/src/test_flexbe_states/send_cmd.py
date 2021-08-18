@@ -8,7 +8,7 @@ from test_flexbe_behaviors.msg import PlanCmd
 
 class SendCmdState(EventState):
 	"""
-	Publishes a pose from userdata so that it can be displayed in rviz.
+	Publishes a pose to dcma planner, this was abandoned.
 
 	-- topic 		string 			Topic to which the pose will be published.
 	-- robot_id		int 			ID of the robot.

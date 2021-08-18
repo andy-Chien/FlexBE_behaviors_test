@@ -21,7 +21,7 @@ class PlanMode(Enum):
 
 class PlanningState(EventState):
 	'''
-	Uses MoveIt to plan and move the specified joints to the target configuration.
+	Uses dcma planner to plan or plan and move the specified joints to the target configuration.
 
 	-- move_group		string		Name of the move group to be used for planning.
 									Specified joint names need to exist in the given group.

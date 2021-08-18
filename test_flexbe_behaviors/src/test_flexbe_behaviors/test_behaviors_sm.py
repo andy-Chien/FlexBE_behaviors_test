@@ -24,7 +24,7 @@ Created on Thu Jun 24 2021
 '''
 class test_behaviorsSM(Behavior):
 	'''
-	test behaviors
+	Ont robot move with dcma planner test
 	'''
 
 

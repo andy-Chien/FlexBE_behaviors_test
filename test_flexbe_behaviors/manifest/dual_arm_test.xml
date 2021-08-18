@@ -4,10 +4,10 @@
 
 	<executable package_path="test_flexbe_behaviors.dual_arm_test_sm" class="dual_arm_testSM" />
 	<tagstring>no1</tagstring>
-	<author>And</author>
+	<author>Andy Chien</author>
 	<date>Thu Jul 08 2021</date>
 	<description>
-		test two arms in one time
+		test two arms with dcma planner in one time
 	</description>
 
 

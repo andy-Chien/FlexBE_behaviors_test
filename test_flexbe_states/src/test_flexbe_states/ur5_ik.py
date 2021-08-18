@@ -8,7 +8,7 @@ import time
 
 class Ur5IkState(EventState):
 	"""
-	Publishes a pose from userdata so that it can be displayed in rviz.
+	Calculate IK of UR5.
 
 	># tar_trans               float[]
 	># tar_rot                 float[]

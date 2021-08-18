@@ -16,7 +16,7 @@ Created on 15.06.2015
 
 class RobotMoveState(EventState):
 	'''
-	Uses MoveIt to plan and move the specified joints to the target configuration.
+	Move robot by planned trajectory.
 
 	-- robot_topic 	string 		Topic on which MoveIt is listening for action calls.
 

@@ -4,10 +4,10 @@
 
 	<executable package_path="test_flexbe_behaviors.three_arms_test_sm" class="three_arms_testSM" />
 	<tagstring>no1</tagstring>
-	<author>And</author>
+	<author>Andy Chien</author>
 	<date>Thu Jul 08 2021</date>
 	<description>
-		test three arms in one time
+		test three arms with dcma planner in one time
 	</description>
 
 

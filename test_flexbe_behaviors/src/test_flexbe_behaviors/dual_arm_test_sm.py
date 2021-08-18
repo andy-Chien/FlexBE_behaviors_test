@@ -17,11 +17,11 @@ from test_flexbe_behaviors.test_behaviors_sm import test_behaviorsSM
 
 '''
 Created on Thu Jul 08 2021
-@author: And
+@author: Andy Chien
 '''
 class dual_arm_testSM(Behavior):
 	'''
-	test two arms in one time
+	test two arms with dcma planner in one time
 	'''
 
 
@@ -62,13 +62,15 @@ class dual_arm_testSM(Behavior):
 		with _sm_container_0:
 			# x:83 y:103
 			OperatableStateMachine.add('test_behaviors',
-										self.use_behavior(test_behaviorsSM, 'Container/test_behaviors'),
+										self.use_behavior(test_behaviorsSM, 'Container/test_behaviors',
+											parameters={'planner_topic': "robot_0/dcma_planner/move_group", 'robot_topic': "robot_0/arm_controller/follow_joint_trajectory", 'robot_id': 0}),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:332 y:104
 			OperatableStateMachine.add('test_behaviors_2',
-										self.use_behavior(test_behaviorsSM, 'Container/test_behaviors_2'),
+										self.use_behavior(test_behaviorsSM, 'Container/test_behaviors_2',
+											parameters={'planner_topic': "robot_1/dcma_planner/move_group", 'robot_topic': "robot_1/arm_controller/follow_joint_trajectory", 'robot_id': 1}),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 

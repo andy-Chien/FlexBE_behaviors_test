@@ -35,10 +35,10 @@ pose = [pose_1, pose_2, pose_3, pose_4, pose_5]
 
 class GetPoseState(EventState):
 	"""
-	Publishes a pose from userdata so that it can be displayed in rviz.
+	Output a fixed pose to move.
 
 
-	#> tar_trans                 float[]		   Target pose values of robot
+	#> tar_trans               float[]		   Target pose values of robot
 	#> tar_rot                 float[]		   Target pose values of robot
 
 	<= done									   Pose has been published.
