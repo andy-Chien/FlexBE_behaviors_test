@@ -25,7 +25,7 @@ class PlanningState(EventState):
 
 	-- move_group		string		Name of the move group to be used for planning.
 									Specified joint names need to exist in the given group.
-	-- action_topic 	string 		Topic on which MoveIt is listening for action calls.
+	-- planner_action 	string 		Action name of planner.
 	-- robot_id		    int         ID of the robot to plan, first robot's id is 0
 	-- plan_mode        string      plan_only or offline or online
 
@@ -45,7 +45,7 @@ class PlanningState(EventState):
 	'''
 
 
-	def __init__(self, move_group, action_topic='/move_group', robot_id=0, plan_mode='plan_only'):
+	def __init__(self, move_group, planner_action='/move_group', robot_id=0, plan_mode='plan_only'):
 		'''
 		Constructor
 		'''
@@ -53,7 +53,7 @@ class PlanningState(EventState):
 											input_keys=['joint_config'],
 											output_keys=['joint_trajectory'])
 		
-		self._action_topic = action_topic
+		self._action_topic = planner_action
 		
 		self._client = ProxyActionClient({self._action_topic: MoveGroupAction})
 		self._move_group = move_group

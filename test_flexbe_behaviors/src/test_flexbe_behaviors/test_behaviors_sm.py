@@ -22,19 +22,19 @@ from test_flexbe_states.ur5_ik import Ur5IkState
 Created on Thu Jun 24 2021
 @author: Andy Chien
 '''
-class TestBehaviorsSM(Behavior):
+class test_behaviorsSM(Behavior):
 	'''
-	Ont robot move with dcma planner test
+	test behaviors
 	'''
 
 
 	def __init__(self):
-		super(TestBehaviorsSM, self).__init__()
-		self.name = 'Test Behaviors'
+		super(test_behaviorsSM, self).__init__()
+		self.name = 'test_behaviors'
 
 		# parameters of this behavior
-		self.add_parameter('planner_topic', 'robot_0/dcma_planner/move_group')
-		self.add_parameter('robot_topic', 'robot_0/arm_controller/follow_joint_trajectory')
+		self.add_parameter('planner_action', 'robot_0/dcma_planner/move_group')
+		self.add_parameter('robot_action', 'robot_0/arm_controller/follow_joint_trajectory')
 		self.add_parameter('robot_id', 0)
 		self.add_parameter('plan_mode', 'plan_only')
 
@@ -69,14 +69,14 @@ class TestBehaviorsSM(Behavior):
 
 			# x:314 y:181
 			OperatableStateMachine.add('move_robot',
-										RobotMoveState(robot_topic=self.robot_topic),
+										RobotMoveState(robot_action=self.robot_action),
 										transitions={'done': 'get_pose', 'failed': 'failed'},
 										autonomy={'done': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'joint_trajectory': 'joint_trajectory'})
 
 			# x:491 y:75
 			OperatableStateMachine.add('plan',
-										PlanningState(move_group='move_group', action_topic=self.planner_topic, robot_id=self.robot_id, plan_mode=self.plan_mode),
+										PlanningState(move_group='move_group', planner_action=self.planner_action, robot_id=self.robot_id, plan_mode=self.plan_mode),
 										transitions={'reached': 'get_pose', 'planning_failed': 'failed', 'control_failed': 'failed', 'planned': 'move_robot'},
 										autonomy={'reached': Autonomy.Off, 'planning_failed': Autonomy.Off, 'control_failed': Autonomy.Off, 'planned': Autonomy.Off},
 										remapping={'joint_config': 'joint_values', 'joint_trajectory': 'joint_trajectory'})

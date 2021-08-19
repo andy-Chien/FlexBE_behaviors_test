@@ -18,8 +18,7 @@ class RobotMoveState(EventState):
 	'''
 	Move robot by planned trajectory.
 
-	-- robot_topic 	string 		Topic on which MoveIt is listening for action calls.
-
+	-- robot_action 	string 		Action nane of robot to move the robot.
 	># joint_trajectory JointTrajectory  planned trajectory
 
 	<= done 						Robot move done.
@@ -27,13 +26,13 @@ class RobotMoveState(EventState):
 	'''
 
 
-	def __init__(self, robot_topic):
+	def __init__(self, robot_action):
 		'''
 		Constructor
 		'''
 		super(RobotMoveState, self).__init__(outcomes=['done', 'failed'],
 											input_keys=['joint_trajectory'])
-		self._robot_topic = robot_topic
+		self._robot_topic = robot_action
 		self._client = ProxyActionClient({self._robot_topic: FollowJointTrajectoryAction})
 		self._goal = FollowJointTrajectoryGoal()
 		self._goal_time_tolerance = rospy.Time(0.1)
