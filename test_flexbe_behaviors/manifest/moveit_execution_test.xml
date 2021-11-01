@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Moveit Execution Test">
+
+	<executable package_path="test_flexbe_behaviors.moveit_execution_test_sm" class="MoveitExecutionTestSM" />
+	<tagstring>v0</tagstring>
+	<author>Andy Chien</author>
+	<date>Mon Nov 01 2021</date>
+	<description>
+		test moveit execution capability
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="text" name="group_name" default="manipulator" label="group_name" hint="Sets the group_name" />
+
+	</params>
+
+
+</behavior>
