@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Scene Check Test Behavior">
+
+	<executable package_path="test_flexbe_behaviors.scene_check_test_behavior_sm" class="SceneCheckTestBehaviorSM" />
+	<tagstring></tagstring>
+	<author>Andy Chien</author>
+	<date>Mon Nov 08 2021</date>
+	<description>
+		Test the function of check_scene_valid
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="text" name="group_name" default="manipulator" label="group_name" hint="Sets the group_name" />
+
+	</params>
+
+
+</behavior>

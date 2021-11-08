@@ -66,7 +66,7 @@ class MoveitExecutionTestSM(Behavior):
 			# x:248 y:24
 			OperatableStateMachine.add('Plan',
 										JointsPlan(group_name=self.group_name),
-										transitions={'failed': 'failed', 'done': 'Execute_Trajectory'},
+										transitions={'failed': 'Plan', 'done': 'Execute_Trajectory'},
 										autonomy={'failed': Autonomy.Off, 'done': Autonomy.Off},
 										remapping={'joint_config': 'joint_config', 'joint_trajectory': 'joint_trajectory', 'target_joints': 'target_joints'})
 

@@ -40,6 +40,8 @@ class JointsPlan(EventState):
 		# group_name = ""
 		self._group_name = group_name
 		self._move_group = moveit_commander.MoveGroupCommander(self._group_name)
+		self._move_group.set_planner_id("RRTConnectkConfigDefault")
+		self._move_group.set_planning_time(1)
 		self._result = None
 
 	def execute(self, userdata):
@@ -56,6 +58,9 @@ class JointsPlan(EventState):
 	def on_enter(self, userdata):
 		# (success flag : boolean, trajectory message : RobotTrajectory,
  		#  planning time : float, error code : MoveitErrorCodes)
+		speed = 0.1
+		self._move_group.set_max_velocity_scaling_factor(speed)
+		self._move_group.set_max_acceleration_scaling_factor(speed)
 		self._result = self._move_group.plan(userdata.joint_config)
 
 	def on_stop(self):
