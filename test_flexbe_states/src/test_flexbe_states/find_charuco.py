@@ -24,7 +24,7 @@ class FindCharucoState(EventState):
 		self.base_h_tool = TransformArray()
 		self.camera_h_charuco = TransformArray()
 		self.base_h_tool.header.frame_id = self.base_link
-		self.camera_h_charuco.frame_id = 'calib_camera'
+		self.camera_h_charuco.header.frame_id = 'calib_camera'
 		self.enter_time = rospy.Time.now()
 
 	def execute(self, userdata):
